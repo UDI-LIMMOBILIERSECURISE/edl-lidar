@@ -16,9 +16,11 @@ import {
   Building2,
   Users,
   BarChart3,
-  CreditCard
+  CreditCard,
+  TrendingUp
 } from 'lucide-react'
 import UsageAlert from '@/components/UsageAlert'
+import NotificationBell from '@/components/NotificationBell'
 
 interface NavItem {
   label: string
@@ -42,6 +44,12 @@ const navItems: NavItem[] = [
     label: 'Equipe',
     href: '/dashboard/team',
     icon: <Users className="w-5 h-5" />,
+    requiredRoles: ['entity_admin', 'agency_manager'],
+  },
+  {
+    label: 'Analytics',
+    href: '/dashboard/analytics',
+    icon: <TrendingUp className="w-5 h-5" />,
     requiredRoles: ['entity_admin', 'agency_manager'],
   },
   {
@@ -227,6 +235,9 @@ export default function DashboardLayout({
             <div className="flex-1 lg:flex-none" />
 
             <div className="flex items-center space-x-4">
+              {/* Notification Bell */}
+              <NotificationBell />
+
               <span className="text-sm text-gray-400 hidden sm:block">
                 {user?.email}
               </span>
