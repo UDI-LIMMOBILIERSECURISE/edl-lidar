@@ -15,7 +15,8 @@ import {
   ChevronRight,
   Building2,
   Users,
-  BarChart3
+  BarChart3,
+  CreditCard
 } from 'lucide-react'
 import UsageAlert from '@/components/UsageAlert'
 
@@ -53,6 +54,12 @@ const navItems: NavItem[] = [
     label: 'Usage',
     href: '/dashboard/usage',
     icon: <BarChart3 className="w-5 h-5" />,
+    requiredRoles: ['entity_admin'],
+  },
+  {
+    label: 'Facturation',
+    href: '/dashboard/billing',
+    icon: <CreditCard className="w-5 h-5" />,
     requiredRoles: ['entity_admin'],
   },
   {
