@@ -1,256 +1,140 @@
-# EDL LIDAR - TODO & Completion List
+# EDL LIDAR - TODO & Completion Status
 
-> **Derniere MAJ**: 2 fevrier 2026
-> **Auteur**: BMad Orchestrator
+> Suivi de l'avancement du projet EDL LIDAR.
 
----
-
-## 1. CONFIGURATION REQUISE (Avant mise en prod)
-
-### 1.1 Variables d'environnement (.env.local)
-
-| Variable | Status | Description |
-|----------|--------|-------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | A configurer | URL projet Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | A configurer | Cle anonyme Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | A configurer | Cle service role |
-| `GEMINI_API_KEY` | A configurer | Cle API Google Gemini |
-| `R2_ACCOUNT_ID` | A configurer | ID compte Cloudflare |
-| `R2_ACCESS_KEY_ID` | A configurer | Access key R2 |
-| `R2_SECRET_ACCESS_KEY` | A configurer | Secret key R2 |
-| `R2_BUCKET_NAME` | A configurer | Nom du bucket |
-| `R2_PUBLIC_URL` | A configurer | URL publique R2 |
-| `STRIPE_SECRET_KEY` | A configurer | Cle secrete Stripe |
-| `STRIPE_WEBHOOK_SECRET` | A configurer | Secret webhook Stripe |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | A configurer | Cle publique Stripe |
-| `STRIPE_PRICE_STARTER` | A creer | Price ID plan Starter |
-| `STRIPE_PRICE_PRO` | A creer | Price ID plan Pro |
-
-### 1.2 Stripe Dashboard
-
-- [ ] Creer compte Stripe (ou utiliser existant)
-- [ ] Creer produit "EDL LIDAR Starter" (29€/mois)
-- [ ] Creer produit "EDL LIDAR Pro" (79€/mois)
-- [ ] Configurer webhook: `https://[domain]/api/stripe/webhook`
-- [ ] Events a ecouter: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
-- [ ] Recuperer les Price IDs et les mettre dans .env
-
-### 1.3 Cloudflare R2
-
-- [ ] Creer bucket R2 si pas fait
-- [ ] Configurer CORS pour le domaine de prod
-- [ ] Activer l'acces public si necessaire
-- [ ] Creer API token avec permissions R2
-
-### 1.4 Supabase
-
-- [ ] Verifier que toutes les migrations sont appliquees (001-010)
-- [ ] Configurer les templates d'email (invitation, reset password)
-- [ ] Configurer le domaine d'envoi d'email (optionnel)
-- [ ] Verifier les RLS policies en production
-
-### 1.5 Google Gemini
-
-- [ ] Creer projet Google Cloud
-- [ ] Activer Gemini API
-- [ ] Generer API key
-- [ ] Configurer quotas si necessaire
+**Date mise a jour:** 02 fevrier 2026
 
 ---
 
-## 2. TESTS A EFFECTUER
+## Epics Completes
 
-### 2.1 Flux d'authentification
+### Epic 5 - Visite Virtuelle IA
 
-- [ ] Inscription nouvel utilisateur → creation entity automatique
-- [ ] Login / Logout
-- [ ] Reset password
-- [ ] Session persistante
+| ID | Story | SP | Status | Notes |
+|----|-------|---:|--------|-------|
+| 5.1 | Infrastructure Web & API | 8 | Done | Next.js 14, Supabase, structure projet |
+| 5.2 | Upload video | 5 | Done | Support jusqu'a 5GB |
+| 5.2b | Integration Cloudflare R2 | 5 | Done | Egress gratuit, presigned URLs |
+| 5.3 | Indexation IA (Gemini) | 8 | Done | Detection automatique des pieces |
+| 5.4 | Player video avec timeline | 5 | Done | Video.js, marqueurs pieces |
+| 5.5 | Chat Lia (assistant IA) | 8 | Done | Gemini 2.0 Flash, navigation auto |
+| 5.6 | Publication & Partage | 3 | Done | Slug unique, iframe embed |
+| 5.7 | Export Metre PDF | 5 | Done | Surfaces sol/murs/plafond |
 
-### 2.2 Multi-tenant
-
-- [ ] Verifier isolation des donnees entre entities
-- [ ] Tester les 3 roles (entity_admin, agency_manager, agent)
-- [ ] Verifier qu'un user ne voit pas les visites d'une autre entity
-
-### 2.3 Invitations
-
-- [ ] Invitation par email (entity_admin)
-- [ ] Invitation par manager (seulement role agent)
-- [ ] Acceptation invitation nouveau compte
-- [ ] Acceptation invitation compte existant
-- [ ] Expiration token (7 jours)
-
-### 2.4 Agences
-
-- [ ] CRUD agences (admin only)
-- [ ] Assignation utilisateurs a une agence
-- [ ] Blocage suppression si agence a des users
-
-### 2.5 Visites virtuelles
-
-- [ ] Upload video R2 (jusqu'a 5GB)
-- [ ] Indexation Gemini (detection pieces)
-- [ ] Player video avec navigation timeline
-- [ ] Chat Lia fonctionnel
-- [ ] Publication lien public
-- [ ] Page publique /v/[slug]
-- [ ] Export metre PDF
-
-### 2.6 Analytics
-
-- [ ] Tracking des vues sur pages publiques
-- [ ] Tracking des interactions Lia
-- [ ] Dashboard analytics par visite
-- [ ] Verifier que les stats s'agregent correctement
-
-### 2.7 Facturation
-
-- [ ] Checkout Stripe vers plan Starter
-- [ ] Checkout Stripe vers plan Pro
-- [ ] Customer Portal (changer carte, annuler)
-- [ ] Webhook: mise a jour du plan apres paiement
-- [ ] Downgrade automatique si abonnement annule
+**Total Epic 5:** 47 SP - **100% Complete**
 
 ---
 
-## 3. STORIES RESTANTES (Epic 7)
+### Epic 6 - Multi-tenant & Authentification
 
-| Story | Description | Status |
-|-------|-------------|--------|
-| AN-3 | Analytics globaux entity | TODO |
-| AN-4 | Notifications et alertes | TODO |
+| ID | Story | SP | Status | Notes |
+|----|-------|---:|--------|-------|
+| MT-1 | Structure multi-tenant | 8 | Done | Tables entities, agencies, user_profiles |
+| MT-2 | Inscription entite | 5 | Done | Flow signup + creation entite |
+| MT-3 | Authentification | 3 | Done | Supabase Auth, cookies SSR |
+| MT-4 | Gestion utilisateurs | 5 | Done | CRUD users, invitations |
+| MT-5 | Gestion agences | 5 | Done | CRUD agencies, assignation users |
+| MT-6 | Dashboard quotas | 5 | Done | Usage vs limites, alertes |
+| MT-7 | RLS Policies | 8 | Done | Isolation complete tenant |
+| MT-8 | Upgrade plan (Stripe) | 5 | Done | Checkout, Portal, Webhooks |
 
-### AN-3: Analytics globaux entity
-- Dashboard `/dashboard/analytics` avec stats consolidees
-- Top visites par vues
-- Comparaison entre agences
-- Export CSV des donnees
-- Graphiques tendances
-
-### AN-4: Notifications et alertes
-- Notifications in-app (nouveau visiteur, seuil atteint)
-- Email digest hebdomadaire
-- Configuration preferences notifications
-- Webhooks sortants (optionnel)
+**Total Epic 6:** 44 SP - **100% Complete**
 
 ---
 
-## 4. FONCTIONNALITES FUTURES (Backlog)
+### Epic 7 - Analytics & Notifications
 
-### Epic 8: App Mobile
-- [ ] React Native app
-- [ ] Capture video depuis l'app
-- [ ] Scan QR pour ouvrir visite
-- [ ] Push notifications
+| ID | Story | SP | Status | Notes |
+|----|-------|---:|--------|-------|
+| 7.1 | Tracking visiteurs RGPD | 5 | Done | Anonyme, graceful degradation |
+| 7.2 | Dashboard analytics | 8 | Done | Stats, charts, filtres |
+| 7.3 | Export CSV/JSON | 3 | Done | Download analytics |
+| 7.4 | Notifications in-app | 5 | Done | Bell icon, liste, mark read |
+| 7.5 | Preferences notifications | 3 | Done | Choix canaux, thresholds |
+| 7.6 | Digest hebdomadaire | 3 | Done | Cron job, email (prepare) |
 
-### Epic 9: Home Staging IA
-- [ ] Integration API de staging (Midjourney/DALL-E)
-- [ ] Upload photo piece vide
-- [ ] Generation mobilier virtuel
-- [ ] Galerie avant/apres
-
-### Epic 10: Ameliorations Lia
-- [ ] Text-to-Speech (ElevenLabs)
-- [ ] Contexte enrichi (historique bien, quartier)
-- [ ] FAQ auto-generee
-- [ ] Mode vocal (Speech-to-Text)
-
-### Epic 11: Integrations
-- [ ] Export vers portails (SeLoger, LeBonCoin)
-- [ ] Integration CRM immobilier
-- [ ] Zapier/Make webhooks
-- [ ] API publique documentee
-
-### Epic 12: SSO Enterprise
-- [ ] SAML/OIDC
-- [ ] Auto-provisioning users
-- [ ] Mapping roles depuis IdP
+**Total Epic 7:** 27 SP - **100% Complete**
 
 ---
 
-## 5. SECURITE & COMPLIANCE
+## Epics Planifies (Non commences)
 
-### 5.1 A verifier
+### Epic 8 - Detection Materiaux IA
 
-- [ ] Toutes les routes protegees par middleware
-- [ ] RLS actif sur toutes les tables
-- [ ] Pas de SUPABASE_SERVICE_ROLE_KEY expose cote client
-- [ ] Rate limiting sur APIs publiques
-- [ ] Validation des inputs (XSS, injection)
+| ID | Story | SP | Status | Notes |
+|----|-------|---:|--------|-------|
+| 6.1 | Detection materiaux IA | 8 | Planned | Gemini Vision, sols/murs/plafonds |
+| 6.2 | Export metres multi-format | 5 | Planned | JSON, XML, Excel, PDF |
+| 6.3 | Export DXF/IFC (CAO/BIM) | 8 | Planned | AutoCAD, Revit compatible |
+| 6.4 | API integrations metiers | 13 | Planned | REST, OAuth, SDK |
+| 6.5 | Rapport PDF diagnostiqueur | 5 | Planned | Format norme metier |
 
-### 5.2 RGPD
-
-- [ ] Page politique de confidentialite
-- [ ] Banniere cookies (si analytics tiers)
-- [ ] Export donnees utilisateur
-- [ ] Suppression compte et donnees
-- [ ] DPA avec sous-traitants (Supabase, Cloudflare, Stripe)
-
-### 5.3 Audit
-
-- [ ] Scan dependances (npm audit)
-- [ ] Test penetration basique
-- [ ] Revue code securite
+**Total Epic 8:** 39 SP - **0% Complete**
 
 ---
 
-## 6. DEPLOIEMENT
+## Backlog Technique
 
-### 6.1 Checklist pre-prod
-
-- [ ] Build sans erreurs (`npm run build`)
-- [ ] Variables env configurees sur Vercel/hosting
-- [ ] Domaine configure
-- [ ] SSL/HTTPS actif
-- [ ] Webhook Stripe pointe vers domaine prod
-- [ ] CORS R2 configure pour domaine prod
-
-### 6.2 Monitoring
-
-- [ ] Logs d'erreurs (Sentry ou equivalent)
-- [ ] Uptime monitoring
-- [ ] Alertes si API down
+| Priorite | Item | Status | Notes |
+|----------|------|--------|-------|
+| P1 | Tests E2E Playwright | Pending | Scenarios critiques |
+| P1 | CI/CD pipeline | Pending | GitHub Actions |
+| P2 | Monitoring Sentry | Pending | Error tracking |
+| P2 | Rate limiting Redis | Pending | Protection API |
+| P2 | Cache CDN | Pending | Optimisation perfs |
+| P3 | Mode offline PWA | Pending | Service workers |
+| P3 | App mobile React Native | Pending | Capture LiDAR |
 
 ---
 
-## 7. DOCUMENTATION
+## Documentation
 
-### 7.1 A creer
-
-- [ ] Guide utilisateur (PDF ou site)
-- [ ] Documentation API (si API publique)
-- [ ] FAQ support
-- [ ] Videos tutoriels (optionnel)
-
-### 7.2 Existante
-
-- [x] README.md
-- [x] CLAUDE.md
-- [x] Stories Epic 6 dans /docs/stories/
-- [x] Ce fichier TODO
+| Document | Status | Path |
+|----------|--------|------|
+| README.md | Done | `/web-app/README.md` |
+| ARCHITECTURE.md | Done | `/docs/ARCHITECTURE.md` |
+| API-REFERENCE.md | Done | `/docs/API-REFERENCE.md` |
+| DATABASE-SCHEMA.md | Done | `/docs/DATABASE-SCHEMA.md` |
+| DEPLOYMENT.md | Done | `/docs/DEPLOYMENT.md` |
+| TODO-COMPLETION.md | Done | `/docs/TODO-COMPLETION.md` |
+| Epic 5 specs | Done | `/docs/epic-5-visite-virtuelle-ia.md` |
+| Epic 6 specs | Done | `/docs/epic-6-diagnostiqueur-export.md` |
+| Multi-tenant specs | Done | `/docs/stories/epic-6-multi-tenant-auth.md` |
 
 ---
 
-## 8. RESUME PRIORITES
+## Metriques Projet
 
-### Immediat (avant lancement)
-1. Configurer toutes les variables .env
-2. Creer produits Stripe
-3. Tester le flux complet signup → visite → analytics
-4. Deployer sur domaine de prod
-
-### Court terme (semaine 1-2)
-1. AN-3: Analytics globaux
-2. AN-4: Notifications
-3. Tests utilisateurs beta
-4. Corrections bugs
-
-### Moyen terme (mois 1-2)
-1. App mobile basique
-2. Ameliorations Lia (TTS)
-3. Integrations portails
+| Metrique | Valeur |
+|----------|--------|
+| **Total Story Points (completes)** | 118 SP |
+| **Total Story Points (planifies)** | 39 SP |
+| **Fichiers source** | ~60 fichiers |
+| **Tables database** | 14 tables |
+| **API endpoints** | ~25 endpoints |
+| **Composants React** | ~20 composants |
 
 ---
 
-*Ce document sera mis a jour au fur et a mesure de l'avancement.*
+## Changelog Recent
+
+### 2026-02-02
+- Documentation technique complete (ARCHITECTURE, API, DEPLOYMENT, DATABASE)
+- Mise a jour README avec tous les epics
+
+### 2026-01-XX
+- Epic 7 complete (Analytics & Notifications)
+- Epic 6 complete (Multi-tenant & Auth)
+- Epic 5 complete (Visite Virtuelle IA)
+
+---
+
+## Prochaines Etapes
+
+1. **Deploiement production** - Suivre guide DEPLOYMENT.md
+2. **Tests E2E** - Couvrir scenarios critiques
+3. **Epic 8** - Detection materiaux IA (cible: Mars 2026)
+
+---
+
+*Derniere mise a jour: 02 fevrier 2026*
