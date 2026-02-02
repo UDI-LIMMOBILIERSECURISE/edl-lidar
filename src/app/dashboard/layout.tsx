@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/components/AuthProvider'
+import { getSupabase } from '@/lib/supabase'
 import {
   LayoutDashboard,
   Video,
@@ -11,13 +12,18 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  Building2,
+  Users,
+  BarChart3
 } from 'lucide-react'
+import UsageAlert from '@/components/UsageAlert'
 
 interface NavItem {
   label: string
   href: string
   icon: React.ReactNode
+  requiredRoles?: string[]
 }
 
 const navItems: NavItem[] = [
@@ -30,6 +36,24 @@ const navItems: NavItem[] = [
     label: 'Mes visites',
     href: '/dashboard/tours',
     icon: <Video className="w-5 h-5" />,
+  },
+  {
+    label: 'Equipe',
+    href: '/dashboard/team',
+    icon: <Users className="w-5 h-5" />,
+    requiredRoles: ['entity_admin', 'agency_manager'],
+  },
+  {
+    label: 'Agences',
+    href: '/dashboard/agencies',
+    icon: <Building2 className="w-5 h-5" />,
+    requiredRoles: ['entity_admin'],
+  },
+  {
+    label: 'Usage',
+    href: '/dashboard/usage',
+    icon: <BarChart3 className="w-5 h-5" />,
+    requiredRoles: ['entity_admin'],
   },
   {
     label: 'Parametres',
@@ -47,6 +71,39 @@ export default function DashboardLayout({
   const router = useRouter()
   const { user, signOut, loading } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [userRole, setUserRole] = useState<string | null>(null)
+
+  // Fetch user profile to get role
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!user) return
+
+      try {
+        const supabase = getSupabase()
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+
+        if (profile) {
+          setUserRole(profile.role)
+        }
+      } catch (err) {
+        console.error('Error fetching user profile:', err)
+      }
+    }
+
+    fetchUserProfile()
+  }, [user])
+
+  // Filter nav items based on user role
+  const filteredNavItems = navItems.filter(item => {
+    if (item.requiredRoles && item.requiredRoles.length > 0) {
+      return userRole && item.requiredRoles.includes(userRole)
+    }
+    return true
+  })
 
   const handleSignOut = async () => {
     await signOut()
@@ -96,7 +153,7 @@ export default function DashboardLayout({
 
         {/* Navigation */}
         <nav className="p-4 space-y-1">
-          {navItems.map((item) => {
+          {filteredNavItems.map((item) => {
             const isActive = pathname === item.href ||
               (item.href !== '/dashboard' && pathname.startsWith(item.href))
 
@@ -179,6 +236,8 @@ export default function DashboardLayout({
 
         {/* Page content */}
         <main className="p-4 lg:p-6">
+          {/* Usage Alert - visible uniquement pour les admins */}
+          {userRole === 'entity_admin' && <UsageAlert />}
           {children}
         </main>
       </div>

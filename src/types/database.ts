@@ -258,6 +258,190 @@ export interface Database {
         }
         Relationships: []
       }
+      // Multi-tenant tables
+      entities: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          plan: 'free' | 'starter' | 'pro' | 'enterprise'
+          max_users: number
+          max_tours: number
+          max_storage_gb: number
+          settings: Json
+          logo_url: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          plan?: 'free' | 'starter' | 'pro' | 'enterprise'
+          max_users?: number
+          max_tours?: number
+          max_storage_gb?: number
+          settings?: Json
+          logo_url?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          plan?: 'free' | 'starter' | 'pro' | 'enterprise'
+          max_users?: number
+          max_tours?: number
+          max_storage_gb?: number
+          settings?: Json
+          logo_url?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      agencies: {
+        Row: {
+          id: string
+          entity_id: string
+          name: string
+          address: string | null
+          phone: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          entity_id: string
+          name: string
+          address?: string | null
+          phone?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          entity_id?: string
+          name?: string
+          address?: string | null
+          phone?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          id: string
+          entity_id: string
+          role: 'entity_admin' | 'agency_manager' | 'agent'
+          agency_ids: string[]
+          display_name: string | null
+          avatar_url: string | null
+          phone: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          entity_id: string
+          role?: 'entity_admin' | 'agency_manager' | 'agent'
+          agency_ids?: string[]
+          display_name?: string | null
+          avatar_url?: string | null
+          phone?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          entity_id?: string
+          role?: 'entity_admin' | 'agency_manager' | 'agent'
+          agency_ids?: string[]
+          display_name?: string | null
+          avatar_url?: string | null
+          phone?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      invitations: {
+        Row: {
+          id: string
+          entity_id: string
+          email: string
+          role: 'entity_admin' | 'agency_manager' | 'agent'
+          agency_ids: string[]
+          invited_by: string
+          token: string
+          expires_at: string
+          accepted_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          entity_id: string
+          email: string
+          role?: 'entity_admin' | 'agency_manager' | 'agent'
+          agency_ids?: string[]
+          invited_by: string
+          token?: string
+          expires_at?: string
+          accepted_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          entity_id?: string
+          email?: string
+          role?: 'entity_admin' | 'agency_manager' | 'agent'
+          agency_ids?: string[]
+          invited_by?: string
+          token?: string
+          expires_at?: string
+          accepted_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      usage_monthly: {
+        Row: {
+          id: string
+          entity_id: string
+          month: string
+          tours_created: number
+          lia_views: number
+          storage_bytes: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          entity_id: string
+          month: string
+          tours_created?: number
+          lia_views?: number
+          storage_bytes?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          entity_id?: string
+          month?: string
+          tours_created?: number
+          lia_views?: number
+          storage_bytes?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -280,6 +464,11 @@ export type TourRoom = Database['public']['Tables']['tour_rooms']['Row']
 export type TourAnnotation = Database['public']['Tables']['tour_annotations']['Row']
 export type LiaSession = Database['public']['Tables']['lia_sessions']['Row']
 export type LiaMessage = Database['public']['Tables']['lia_messages']['Row']
+export type Entity = Database['public']['Tables']['entities']['Row']
+export type Agency = Database['public']['Tables']['agencies']['Row']
+export type UserProfile = Database['public']['Tables']['user_profiles']['Row']
+export type Invitation = Database['public']['Tables']['invitations']['Row']
+export type UsageMonthly = Database['public']['Tables']['usage_monthly']['Row']
 
 // Types pour les insertions
 export type NewVirtualTour = Database['public']['Tables']['virtual_tours']['Insert']
