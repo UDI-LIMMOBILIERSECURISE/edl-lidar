@@ -24,9 +24,13 @@ interface LiaChatProps {
   rooms: Room[]
   currentRoom: Room | null
   onNavigateToRoom?: (roomName: string) => void
+  // Analytics callbacks
+  onOpen?: () => void
+  onClose?: () => void
+  onMessage?: (message: string) => void
 }
 
-export default function LiaChat({ tourId, rooms = [], currentRoom, onNavigateToRoom }: LiaChatProps) {
+export default function LiaChat({ tourId, rooms = [], currentRoom, onNavigateToRoom, onOpen, onClose, onMessage }: LiaChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -46,6 +50,14 @@ export default function LiaChat({ tourId, rooms = [], currentRoom, onNavigateToR
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // Track component mount/unmount for analytics
+  useEffect(() => {
+    onOpen?.()
+    return () => {
+      onClose?.()
+    }
+  }, [onOpen, onClose])
 
   // Détecter les commandes de navigation
   const detectNavigationCommand = (text: string): string | null => {
@@ -130,6 +142,9 @@ export default function LiaChat({ tourId, rooms = [], currentRoom, onNavigateToR
     const messageText = input.trim()
     setInput('')
     setIsLoading(true)
+
+    // Track message for analytics
+    onMessage?.(messageText)
 
     try {
       // Vérifier si c'est une commande de navigation

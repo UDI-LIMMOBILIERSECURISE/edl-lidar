@@ -23,7 +23,8 @@ import {
   ExternalLink,
   Globe,
   Lock,
-  QrCode
+  QrCode,
+  BarChart3
 } from 'lucide-react'
 
 interface Tour {
@@ -299,6 +300,16 @@ export default function TourDetailPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Analytics button */}
+            <Link
+              href={`/tours/${tourId}/analytics`}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg transition bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white"
+              title="Voir les analytics"
+            >
+              <BarChart3 size={18} />
+              <span className="text-sm hidden sm:inline">Analytics</span>
+            </Link>
+
             {/* Index AI button */}
             <button
               onClick={handleIndex}
@@ -308,7 +319,7 @@ export default function TourDetailPage() {
                   ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30'
                   : 'bg-purple-600 text-white hover:bg-purple-700'
               } ${indexing ? 'opacity-50 cursor-wait' : ''}`}
-              title={rooms.length > 0 ? 'Ré-indexer avec l\'IA' : 'Indexer les pièces avec l\'IA'}
+              title={rooms.length > 0 ? 'Re-indexer avec l\'IA' : 'Indexer les pieces avec l\'IA'}
             >
               {indexing ? (
                 <RefreshCw size={18} className="animate-spin" />
@@ -321,7 +332,7 @@ export default function TourDetailPage() {
                 {indexing
                   ? 'Analyse...'
                   : rooms.length > 0
-                    ? `${rooms.length} pièces`
+                    ? `${rooms.length} pieces`
                     : 'Indexer IA'
                 }
               </span>

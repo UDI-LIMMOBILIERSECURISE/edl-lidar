@@ -442,6 +442,94 @@ export interface Database {
         }
         Relationships: []
       }
+      // Analytics tables
+      tour_views: {
+        Row: {
+          id: string
+          tour_id: string
+          visitor_id: string
+          session_id: string
+          started_at: string
+          ended_at: string | null
+          duration_seconds: number
+          rooms_visited: string[]
+          device_type: 'desktop' | 'mobile' | 'tablet' | 'unknown'
+          user_agent: string | null
+          referrer: string | null
+          utm_source: string | null
+          utm_medium: string | null
+          utm_campaign: string | null
+          country: string | null
+          city: string | null
+          is_bot: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tour_id: string
+          visitor_id: string
+          session_id: string
+          started_at?: string
+          ended_at?: string | null
+          duration_seconds?: number
+          rooms_visited?: string[]
+          device_type?: 'desktop' | 'mobile' | 'tablet' | 'unknown'
+          user_agent?: string | null
+          referrer?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          country?: string | null
+          city?: string | null
+          is_bot?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          tour_id?: string
+          visitor_id?: string
+          session_id?: string
+          started_at?: string
+          ended_at?: string | null
+          duration_seconds?: number
+          rooms_visited?: string[]
+          device_type?: 'desktop' | 'mobile' | 'tablet' | 'unknown'
+          user_agent?: string | null
+          referrer?: string | null
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          country?: string | null
+          city?: string | null
+          is_bot?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
+      tour_events: {
+        Row: {
+          id: string
+          view_id: string
+          event_type: 'room_enter' | 'room_exit' | 'lia_open' | 'lia_close' | 'lia_message' | 'share_click' | 'fullscreen' | 'play' | 'pause' | 'seek' | 'video_end' | 'heartbeat'
+          event_data: Json
+          timestamp: string
+        }
+        Insert: {
+          id?: string
+          view_id: string
+          event_type: 'room_enter' | 'room_exit' | 'lia_open' | 'lia_close' | 'lia_message' | 'share_click' | 'fullscreen' | 'play' | 'pause' | 'seek' | 'video_end' | 'heartbeat'
+          event_data?: Json
+          timestamp?: string
+        }
+        Update: {
+          id?: string
+          view_id?: string
+          event_type?: 'room_enter' | 'room_exit' | 'lia_open' | 'lia_close' | 'lia_message' | 'share_click' | 'fullscreen' | 'play' | 'pause' | 'seek' | 'video_end' | 'heartbeat'
+          event_data?: Json
+          timestamp?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -469,6 +557,8 @@ export type Agency = Database['public']['Tables']['agencies']['Row']
 export type UserProfile = Database['public']['Tables']['user_profiles']['Row']
 export type Invitation = Database['public']['Tables']['invitations']['Row']
 export type UsageMonthly = Database['public']['Tables']['usage_monthly']['Row']
+export type TourView = Database['public']['Tables']['tour_views']['Row']
+export type TourEvent = Database['public']['Tables']['tour_events']['Row']
 
 // Types pour les insertions
 export type NewVirtualTour = Database['public']['Tables']['virtual_tours']['Insert']

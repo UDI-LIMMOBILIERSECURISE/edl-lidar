@@ -1,8 +1,13 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import TourPlayer from './TourPlayer'
 import LiaChat from './LiaChat'
+import AnalyticsTracker, {
+  useRoomTracking,
+  useLiaTracking,
+  useVideoTracking,
+} from './AnalyticsTracker'
 
 interface Room {
   id: string
@@ -40,8 +45,23 @@ export default function PublicTourView({
 }: PublicTourViewProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null)
+  const [viewId, setViewId] = useState<string | null>(null)
 
-  // Callback pour naviguer vers une pièce depuis Lia
+  // Analytics tracking hooks
+  const { trackRoomChange } = useRoomTracking(viewId)
+  const { trackLiaOpen, trackLiaClose, trackLiaMessage } = useLiaTracking(viewId)
+  const { trackPlay, trackPause, trackSeek, trackVideoEnd } = useVideoTracking(viewId)
+
+  // Track room changes
+  useEffect(() => {
+    if (currentRoom) {
+      trackRoomChange(currentRoom.id, currentRoom.name)
+    } else {
+      trackRoomChange(null, null)
+    }
+  }, [currentRoom, trackRoomChange])
+
+  // Callback pour naviguer vers une piece depuis Lia
   const handleNavigateToRoom = useCallback((roomName: string) => {
     const room = rooms.find(r =>
       r.name.toLowerCase() === roomName.toLowerCase() ||
@@ -54,13 +74,64 @@ export default function PublicTourView({
     }
   }, [rooms])
 
-  // Callback pour recevoir la ref vidéo du TourPlayer
+  // Callback pour recevoir la ref video du TourPlayer
   const handleVideoRef = useCallback((ref: HTMLVideoElement | null) => {
     videoRef.current = ref
+
+    // Add video event listeners for analytics
+    if (ref) {
+      ref.addEventListener('play', () => {
+        trackPlay(ref.currentTime)
+      })
+
+      ref.addEventListener('pause', () => {
+        trackPause(ref.currentTime)
+      })
+
+      ref.addEventListener('ended', () => {
+        trackVideoEnd()
+      })
+
+      // Track seeks (detect significant time jumps)
+      let lastTime = 0
+      ref.addEventListener('timeupdate', () => {
+        const currentTime = ref.currentTime
+        const timeDiff = Math.abs(currentTime - lastTime)
+        // If time jumped more than 2 seconds, it's likely a seek
+        if (timeDiff > 2 && lastTime > 0) {
+          trackSeek(lastTime, currentTime)
+        }
+        lastTime = currentTime
+      })
+    }
+  }, [trackPlay, trackPause, trackSeek, trackVideoEnd])
+
+  // Callback quand view_id est pret
+  const handleViewIdReady = useCallback((id: string) => {
+    setViewId(id)
   }, [])
+
+  // Callbacks pour les interactions Lia
+  const handleLiaOpen = useCallback(() => {
+    trackLiaOpen()
+  }, [trackLiaOpen])
+
+  const handleLiaClose = useCallback(() => {
+    trackLiaClose()
+  }, [trackLiaClose])
+
+  const handleLiaMessage = useCallback((message: string) => {
+    trackLiaMessage(message)
+  }, [trackLiaMessage])
 
   return (
     <>
+      {/* Analytics Tracker (invisible) */}
+      <AnalyticsTracker
+        tourId={tourId}
+        onViewIdReady={handleViewIdReady}
+      />
+
       {/* Player */}
       <div className="relative h-screen">
         <TourPlayer
@@ -72,13 +143,16 @@ export default function PublicTourView({
         />
       </div>
 
-      {/* Chat Lia - panneau fixe en bas à droite */}
+      {/* Chat Lia - panneau fixe en bas a droite */}
       <div className="fixed bottom-4 right-4 w-96 h-[500px] bg-gray-900 rounded-xl shadow-2xl border border-gray-700 overflow-hidden z-50">
         <LiaChat
           tourId={tourId}
           rooms={rooms}
           currentRoom={currentRoom}
           onNavigateToRoom={handleNavigateToRoom}
+          onOpen={handleLiaOpen}
+          onClose={handleLiaClose}
+          onMessage={handleLiaMessage}
         />
       </div>
     </>
