@@ -32,7 +32,7 @@ interface Tour {
   address: string
   property_type: string
   tour_type: string
-  video_url: string
+  video_url: string | null
   thumbnail_url: string | null
   status: string
   has_lidar: boolean
@@ -45,7 +45,7 @@ interface Tour {
 interface Room {
   id: string
   name: string
-  room_type: string
+  room_type: string | null
   start_time: number
   end_time: number
   floor_surface_m2: number | null
@@ -58,7 +58,7 @@ interface Annotation {
   room_id: string | null
   timecode: number
   text: string
-  annotation_type: string
+  annotation_type: string | null
 }
 
 export default function TourDetailPage() {

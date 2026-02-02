@@ -85,6 +85,7 @@ export interface Database {
           published_at?: string | null
           user_id?: string
         }
+        Relationships: []
       }
       tour_rooms: {
         Row: {
@@ -141,6 +142,7 @@ export interface Database {
           display_order?: number | null
           created_at?: string
         }
+        Relationships: []
       }
       tour_annotations: {
         Row: {
@@ -182,6 +184,7 @@ export interface Database {
           photo_url?: string | null
           created_at?: string
         }
+        Relationships: []
       }
       lia_sessions: {
         Row: {
@@ -214,6 +217,7 @@ export interface Database {
           rooms_visited?: string[] | null
           total_watch_time_seconds?: number | null
         }
+        Relationships: []
       }
       lia_messages: {
         Row: {
@@ -252,7 +256,20 @@ export interface Database {
           cost_usd?: number | null
           created_at?: string
         }
+        Relationships: []
       }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }

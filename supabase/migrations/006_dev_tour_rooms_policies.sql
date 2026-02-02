@@ -6,18 +6,22 @@
 DROP POLICY IF EXISTS "Users can view rooms of accessible tours" ON tour_rooms;
 DROP POLICY IF EXISTS "Users can manage rooms of their tours" ON tour_rooms;
 
+DROP POLICY IF EXISTS "Anyone can view rooms (DEV)" ON tour_rooms;
 CREATE POLICY "Anyone can view rooms (DEV)"
 ON tour_rooms FOR SELECT
 USING (true);
 
+DROP POLICY IF EXISTS "Anyone can insert rooms (DEV)" ON tour_rooms;
 CREATE POLICY "Anyone can insert rooms (DEV)"
 ON tour_rooms FOR INSERT
 WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Anyone can update rooms (DEV)" ON tour_rooms;
 CREATE POLICY "Anyone can update rooms (DEV)"
 ON tour_rooms FOR UPDATE
 USING (true);
 
+DROP POLICY IF EXISTS "Anyone can delete rooms (DEV)" ON tour_rooms;
 CREATE POLICY "Anyone can delete rooms (DEV)"
 ON tour_rooms FOR DELETE
 USING (true);

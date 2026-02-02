@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/types/database'
 
-// Client côté navigateur
+// Client cote navigateur
 export const createBrowserClient = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -9,7 +9,8 @@ export const createBrowserClient = () => {
   return createClient<Database>(supabaseUrl, supabaseAnonKey)
 }
 
-// Client côté serveur (API routes, Server Components)
+// Client cote serveur avec service role (API routes privilegiees)
+// Note: Utiliser uniquement dans les API routes, pas dans les Client Components
 export const createServerClient = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!

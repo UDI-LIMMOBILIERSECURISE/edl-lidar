@@ -54,21 +54,20 @@ export async function POST(request: NextRequest) {
 
       let sessionId: string
 
-      // Chercher une session existante récente (< 30 min)
-      const { data: existingSession } = await supabase
+      // Chercher une session existante recente (< 30 min)
+      const { data: existingSessions } = await supabase
         .from('lia_sessions')
         .select('id')
         .eq('tour_id', tourId)
         .eq('visitor_id', visitorId)
         .gte('started_at', new Date(Date.now() - 30 * 60 * 1000).toISOString())
         .order('started_at', { ascending: false })
-        .limit(1)
-        .single()
+        .limit(1) as { data: { id: string }[] | null }
 
-      if (existingSession) {
-        sessionId = existingSession.id
+      if (existingSessions && existingSessions.length > 0) {
+        sessionId = existingSessions[0].id
       } else {
-        // Créer une nouvelle session
+        // Creer une nouvelle session
         const { data: newSession } = await supabase
           .from('lia_sessions')
           .insert({
@@ -76,7 +75,7 @@ export async function POST(request: NextRequest) {
             visitor_id: visitorId
           })
           .select('id')
-          .single()
+          .single() as { data: { id: string } | null }
 
         sessionId = newSession?.id || ''
       }
