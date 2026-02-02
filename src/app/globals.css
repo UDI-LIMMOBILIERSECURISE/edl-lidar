@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --secondary: #10b981;
+  --secondary-dark: #059669;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 10, 10, 10;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Video.js custom styles */
+.video-js {
+  width: 100%;
+  height: 100%;
+}
+
+.video-js .vjs-big-play-button {
+  @apply bg-primary-500 rounded-full border-none;
+}
+
+/* Chat Lia styles */
+.lia-chat {
+  @apply fixed bottom-4 right-4 w-80 max-h-96 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700;
+}
+
+.lia-message {
+  @apply p-3 rounded-lg mb-2 max-w-[80%];
+}
+
+.lia-message.user {
+  @apply bg-primary-500 text-white ml-auto;
+}
+
+.lia-message.assistant {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+/* Room navigation buttons */
+.room-nav-btn {
+  @apply px-3 py-1.5 text-sm rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-primary-500 hover:text-white transition-colors;
+}
+
+.room-nav-btn.active {
+  @apply bg-primary-500 text-white;
+}
+
+/* Timeline markers */
+.timeline-marker {
+  @apply absolute top-0 w-1 h-full bg-primary-500 opacity-50 cursor-pointer hover:opacity-100 transition-opacity;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply animate-spin rounded-full h-5 w-5 border-2 border-gray-300 border-t-primary-500;
+}
